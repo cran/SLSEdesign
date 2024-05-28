@@ -11,7 +11,6 @@ original <- options(digits = 3)
 require(SLSEdesign)
 require(CVXR)
 require(tibble)
-require(pracma)
 require(gridExtra)
 
 ## ----Define inputs, cache = TRUE----------------------------------------------

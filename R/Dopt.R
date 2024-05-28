@@ -1,13 +1,13 @@
 #' Calculate the D-optimal design under the SLSE
 #'
 #' @param FUN The function to calculate the derivative of the given model.
-#' @param N The number of sample points in the design space
-#' @param u The discretized design space
-#' @param tt The level of skewness
-#' @param theta The parameter value of the model
-#' @param num_iter Maximum number of iteration
+#' @param N The number of sample points in the design space.
+#' @param u The discretized design space.
+#' @param tt The level of skewness. When tt=0, it is equivalent to compute the D-optimal design under the ordinary least squares estimator.
+#' @param theta The parameter value of the model.
+#' @param num_iter Maximum number of iteration.
 #'
-#' @details This function calculates the loss function of the design problem under the D-optimality. The loss function under D-optimality is defined as the log determinant of the inverse of the Fisher information matrix
+#' @details This function calculates the D-optimal design and the loss function under the D-optimality. The loss function under D-optimality is defined as the log determinant of the inverse of the Fisher information matrix.
 #'
 #' @import CVXR
 #'

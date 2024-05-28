@@ -7,17 +7,17 @@
 Dopt(N, u, tt, FUN, theta, num_iter = 1000)
 }
 \arguments{
-\item{N}{The number of sample points in the design space}
+\item{N}{The number of sample points in the design space.}
 
-\item{u}{The discretized design space}
+\item{u}{The discretized design space.}
 
-\item{tt}{The level of skewness}
+\item{tt}{The level of skewness. When tt=0, it is equivalent to compute the D-optimal design under the ordinary least squares estimator.}
 
 \item{FUN}{The function to calculate the derivative of the given model.}
 
-\item{theta}{The parameter value of the model}
+\item{theta}{The parameter value of the model.}
 
-\item{num_iter}{Maximum number of iteration}
+\item{num_iter}{Maximum number of iteration.}
 }
 \value{
 A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
@@ -26,7 +26,7 @@ A list that contains 1. Value of the objective function at solution. 2. Status. 
 Calculate the D-optimal design under the SLSE
 }
 \details{
-This function calculates the loss function of the design problem under the D-optimality. The loss function under D-optimality is defined as the log determinant of the inverse of the Fisher information matrix
+This function calculates the D-optimal design and the loss function under the D-optimality. The loss function under D-optimality is defined as the log determinant of the inverse of the Fisher information matrix.
 }
 \examples{
 \donttest{

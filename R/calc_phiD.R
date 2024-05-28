@@ -28,9 +28,9 @@ calc_phiD <- function(design, theta, FUN, tt, A){
   u <- design$location
   w_hat <- design$weight
   N <- length(u)
-  n <- length(theta)
-  g1 <- matrix(0, n, 1)
-  G2 <- matrix(0, n, n)
+  q <- length(theta)
+  g1 <- matrix(0, q, 1)
+  G2 <- matrix(0, q, q)
   phi_D <- rep(0, N)
 
   for( i in 1:N){

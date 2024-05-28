@@ -9,7 +9,6 @@
 #' @details This function calculates the loss function of the design problem under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 #'
 #' @import CVXR
-#' @importFrom pracma blkdiag
 #'
 #' @return The loss of the model at each design points
 #'
@@ -30,12 +29,13 @@ calc_phiA <- function(design, theta, FUN, tt, A){
   u <- design$location
   w_hat <- design$weight
   N <- length(u)
-  n <- length(theta)
-  g1 <- matrix(0, n, 1)
-  G2 <- matrix(0, n, n)
+  q <- length(theta)
+  g1 <- matrix(0, q, 1)
+  G2 <- matrix(0, q, q)
   phi_A <- rep(0, N)
   BI <- solve(A)
-  C <- blkdiag(matrix(0), diag(1, n))
+
+  C <- diag(c(0, rep(1, q)))
 
   for( i in 1:N){
     f <- FUN(u[i], theta)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_weight.R
 \name{plot_weight}
 \alias{plot_weight}
-\title{Plot the weight distribution of the optimal design}
+\title{Plot the weight distribution of the optimal design for univaraite regression model}
 \usage{
 plot_weight(design)
 }
@@ -13,7 +13,7 @@ plot_weight(design)
 The plot that shows the given optimal design
 }
 \description{
-Plot the weight distribution of the optimal design
+Plot the weight distribution of the optimal design for univaraite regression model
 }
 \details{
 This functions produce a figure that contains the location and their associated weights of the resulted optimal design measures.

@@ -1,16 +1,15 @@
 #' Calculate the A-optimal design under the second-order Least squares estimator
 #'
 #' @param FUN The function to calculate the derivative of the given model.
-#' @param N The number of sample points in the design space
-#' @param u The discretized design space
-#' @param tt The level of skewness
-#' @param theta The parameter value of the model
-#' @param num_iter Maximum number of iteration
+#' @param N The number of sample points in the design space.
+#' @param u The discretized design space.
+#' @param tt The level of skewness between 0 to 1 (inclusive). When tt=0, it is equivalent to compute the A-optimal design under the ordinary least squares estimator.
+#' @param theta The parameter value of the model.
+#' @param num_iter Maximum number of iteration.
 #'
-#' @details This function calculates the loss function of the design problem under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
+#' @details This function calculates the A-optimal design and the loss function under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 #'
 #' @import CVXR
-#' @importFrom pracma blkdiag
 #' @importFrom tibble tibble
 #'
 #' @return A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
@@ -47,7 +46,7 @@ Aopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
   B <- rbind(cbind(1, sqrt(tt) * t(g1)),
              cbind(sqrt(tt) * g1, G2))
 
-  C <- pracma::blkdiag(matrix(0), diag(1, n))
+  C <-  rbind(matrix(0, nrow =1, ncol = n), base::diag(1, n))
 
   for(k in 1:n){
     obj_val <- obj_val + CVXR::matrix_frac(C[, k], B)
@@ -62,7 +61,7 @@ Aopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
 
   # figure out the location of the design points
   tb <- tibble(location = u,
-                   weight = c(res$getValue(w)))
+               weight = c(res$getValue(w)))
   tb <- tb[tb$weight > 1E-2, ]
   list(val = res$value, status = res$status, design = tb)
 }

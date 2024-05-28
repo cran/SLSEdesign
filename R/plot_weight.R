@@ -1,4 +1,4 @@
-#' Plot the weight distribution of the optimal design
+#' Plot the weight distribution of the optimal design for univaraite regression model
 #'
 #' @param design The resulted design that contains the design points and the associated weights
 #'

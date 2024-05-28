@@ -2,29 +2,29 @@
 % Please edit documentation in R/plot_direction_Dopt.R
 \name{plot_direction_Dopt}
 \alias{plot_direction_Dopt}
-\title{Calculate the loss function of the D-optimal design}
+\title{Verify the optimality condition for the D-optimal design}
 \usage{
 plot_direction_Dopt(u, design, tt, FUN, theta)
 }
 \arguments{
-\item{u}{The discretized design points}
+\item{u}{The discretized design points.}
 
-\item{design}{The resulted design that contains the design points and the associated weights}
+\item{design}{The D-optimal design that contains the design points and the associated weights.}
 
-\item{tt}{The level of skewness}
+\item{tt}{The level of skewness.}
 
 \item{FUN}{The function to calculate the derivative of the given model.}
 
-\item{theta}{The parameter value of the model}
+\item{theta}{The parameter value of the model.}
 }
 \value{
-The plot of the directional derivative of a D-optimal design
+The plot of the negative value of the directional derivative of a D-optimal design
 }
 \description{
-Calculate the loss function of the D-optimal design
+Verify the optimality condition for the D-optimal design
 }
 \details{
-This function produces the figure for the directional derivative of the given D-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the directional derivative should be below zero line.
+This function produces the figure for the negative value of the directional derivative of the given D-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the directional derivative should be below zero line.
 }
 \examples{
 poly3 <- function(xi, theta){

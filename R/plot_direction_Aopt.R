@@ -1,17 +1,16 @@
-#' Calculate the loss function of the A-optimal design
+#' Verify the optimality condition for the A-optimal design
 #'
-#' @param design The resulted design that contains the design points and the associated weights
+#' @param design The A-optimal design that contains the design points and the associated weights
 #' @param FUN The function to calculate the derivative of the given model.
-#' @param tt The level of skewness
-#' @param theta The parameter value of the model
-#' @param u The discretized design points
+#' @param tt The level of skewness.
+#' @param theta The parameter value of the model.
+#' @param u The discretized design points.
 #'
-#' @details This function produces the figure for the directional derivative of the given A-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the directional derivative should be below zero line.
+#' @details This function produces the figure for the directional derivative of the given A-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the negative value of the directional derivative should be below zero line.
 #'
 #' @import CVXR
-#' @importFrom pracma blkdiag
 #'
-#' @return The plot of the directional derivative of a A-optimal design
+#' @return The plot of the negative value of the directional derivative of an A-optimal design
 #'
 #' @examples
 #' poly3 <- function(xi, theta){
@@ -44,7 +43,8 @@ plot_direction_Aopt <- function(u, design, tt, FUN, theta){
              cbind(sqt*g1, G2))
   BI <- solve(B)
 
-  C <- pracma::blkdiag(matrix(0), diag(1, q))
+  # C <-  rbind(matrix(0, nrow =1, ncol = q), base::diag(1, q))
+  C <- diag(c(0, rep(1, q)))
   term <- sum(diag(C * BI * t(C)))
   # mini <- min(phi - q)
   ff <- function(x){

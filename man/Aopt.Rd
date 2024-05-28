@@ -7,17 +7,17 @@
 Aopt(N, u, tt, FUN, theta, num_iter = 1000)
 }
 \arguments{
-\item{N}{The number of sample points in the design space}
+\item{N}{The number of sample points in the design space.}
 
-\item{u}{The discretized design space}
+\item{u}{The discretized design space.}
 
-\item{tt}{The level of skewness}
+\item{tt}{The level of skewness between 0 to 1 (inclusive). When tt=0, it is equivalent to compute the A-optimal design under the ordinary least squares estimator.}
 
 \item{FUN}{The function to calculate the derivative of the given model.}
 
-\item{theta}{The parameter value of the model}
+\item{theta}{The parameter value of the model.}
 
-\item{num_iter}{Maximum number of iteration}
+\item{num_iter}{Maximum number of iteration.}
 }
 \value{
 A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
@@ -26,7 +26,7 @@ A list that contains 1. Value of the objective function at solution. 2. Status. 
 Calculate the A-optimal design under the second-order Least squares estimator
 }
 \details{
-This function calculates the loss function of the design problem under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
+This function calculates the A-optimal design and the loss function under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 }
 \examples{
 \donttest{

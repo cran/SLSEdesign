@@ -1,15 +1,14 @@
-#' Calculate the loss function of the D-optimal design
+#' Verify the optimality condition for the D-optimal design
 #'
-#' @param design The resulted design that contains the design points and the associated weights
+#' @param design The D-optimal design that contains the design points and the associated weights.
 #' @param FUN The function to calculate the derivative of the given model.
-#' @param tt The level of skewness
-#' @param theta The parameter value of the model
-#' @param u The discretized design points
+#' @param tt The level of skewness.
+#' @param theta The parameter value of the model.
+#' @param u The discretized design points.
 #'
-#' @details This function produces the figure for the directional derivative of the given D-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the directional derivative should be below zero line.
+#' @details This function produces the figure for the negative value of the directional derivative of the given D-optimal design of the compact supports. According to the general equivalence theorem, for an optimal design, all the directional derivative should be below zero line.
 #'
 #' @import CVXR
-#' @importFrom pracma blkdiag
 #'
 #' @examples
 #' poly3 <- function(xi, theta){
@@ -22,7 +21,7 @@
 #'   theta = rep(0, 4))
 #'
 #'
-#' @return The plot of the directional derivative of a D-optimal design
+#' @return The plot of the negative value of the directional derivative of a D-optimal design
 #'
 #' @export
 
