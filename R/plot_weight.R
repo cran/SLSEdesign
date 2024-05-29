@@ -4,8 +4,6 @@
 #'
 #' @details This functions produce a figure that contains the location and their associated weights of the resulted optimal design measures.
 #'
-#' @importFrom graphics abline legend lines points
-#'
 #' @return The plot that shows the given optimal design
 #'
 #' @examples

@@ -10,57 +10,44 @@
 #' @details This function calculates the A-optimal design and the loss function under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 #'
 #' @import CVXR
-#' @importFrom tibble tibble
 #'
 #' @return A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
 #'
 #' @examples
-#' \donttest{
-#' poly1 <- function(xi, theta){
-#'   matrix(c(1, xi), ncol = 1)
+#' poly3 <- function(xi, theta){
+#'   matrix(c(1, xi, xi^2, xi^3), ncol = 1)
 #' }
-#' my_design <- Aopt(N = 11, u = seq(-1, +1, length.out = 11),
-#'    tt = 0, FUN = poly1, theta = rep(0,2), num_iter = 50)
-#' my_design$design
+#' Npt <- 101
+#' my_design <- Aopt(N = Npt, u = seq(-1, +1, length.out = Npt),
+#'    tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+#' round(my_design$design, 3)
 #' my_design$val
-#' }
 #' @export
 
 Aopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
 
   n <- length(theta)
-  g1 <- matrix(0, n, 1)
-  G2 <- matrix(0, n, n)
-  obj_val <- 0
-  C <- rbind(0, diag(1, n, n))
-
-  w <- CVXR::Variable(N)
-
+  C <-  rbind(0, diag(1, n))
   # Set up constraints
-  for (i in 1:N) {
-    f <- FUN(u[i], theta)
-    g1 <- g1 + w[i] * f
-    G2 <- G2 + w[i] * f %*% t(f)
-  }
+  w <- CVXR::Variable(N)
+  multi_f <- sapply(u, FUN, theta)
+  g1 <- multi_f %*% w
+  G2 <- multi_f %*% CVXR::diag(w) %*% t(multi_f)
 
   B <- rbind(cbind(1, sqrt(tt) * t(g1)),
              cbind(sqrt(tt) * g1, G2))
-
-  C <-  rbind(matrix(0, nrow =1, ncol = n), base::diag(1, n))
-
-  for(k in 1:n){
-    obj_val <- obj_val + CVXR::matrix_frac(C[, k], B)
-  }
+  obj_val <- CVXR::matrix_frac(C, B)
 
   my_constraints <- list(w >=0, sum(w) == 1)
 
   # Solve the optimization problem
   problem <- CVXR::Problem(CVXR::Minimize(obj_val),
                            constraints = my_constraints)
-  res <- CVXR::solve(problem, num_iter = num_iter)
+  res <- CVXR::solve(problem, num_iter = num_iter,
+                     ignore_dcp = TRUE)
 
   # figure out the location of the design points
-  tb <- tibble(location = u,
+  tb <- data.frame(location = u,
                weight = c(res$getValue(w)))
   tb <- tb[tb$weight > 1E-2, ]
   list(val = res$value, status = res$status, design = tb)

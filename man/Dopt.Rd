@@ -29,13 +29,13 @@ Calculate the D-optimal design under the SLSE
 This function calculates the D-optimal design and the loss function under the D-optimality. The loss function under D-optimality is defined as the log determinant of the inverse of the Fisher information matrix.
 }
 \examples{
-\donttest{
 poly3 <- function(xi, theta){
   matrix(c(1, xi, xi^2, xi^3), ncol = 1)
 }
-my_design <- Dopt(N = 11, u = seq(-1, +1, length.out = 11),
-   tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 500)
-my_design$design
+Npt <- 101
+my_design <- Dopt(N = Npt, u = seq(-1, +1, length.out = Npt),
+   tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+round(my_design$design, 3)
 my_design$val
-}
+
 }

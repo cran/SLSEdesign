@@ -29,13 +29,12 @@ Calculate the A-optimal design under the second-order Least squares estimator
 This function calculates the A-optimal design and the loss function under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 }
 \examples{
-\donttest{
-poly1 <- function(xi, theta){
-  matrix(c(1, xi), ncol = 1)
+poly3 <- function(xi, theta){
+  matrix(c(1, xi, xi^2, xi^3), ncol = 1)
 }
-my_design <- Aopt(N = 11, u = seq(-1, +1, length.out = 11),
-   tt = 0, FUN = poly1, theta = rep(0,2), num_iter = 50)
-my_design$design
+Npt <- 101
+my_design <- Aopt(N = Npt, u = seq(-1, +1, length.out = Npt),
+   tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+round(my_design$design, 3)
 my_design$val
-}
 }

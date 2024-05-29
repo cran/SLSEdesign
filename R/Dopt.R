@@ -14,30 +14,26 @@
 #' @return A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
 #'
 #' @examples
-#' \donttest{
 #' poly3 <- function(xi, theta){
 #'   matrix(c(1, xi, xi^2, xi^3), ncol = 1)
 #' }
-#' my_design <- Dopt(N = 11, u = seq(-1, +1, length.out = 11),
-#'    tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 500)
-#' my_design$design
+#' Npt <- 101
+#' my_design <- Dopt(N = Npt, u = seq(-1, +1, length.out = Npt),
+#'    tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+#' round(my_design$design, 3)
 #' my_design$val
-#' }
+#'
 #' @export
 
 Dopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
   n <- length(theta)
-  g1 <- matrix(0, n, 1)
-  G2 <- matrix(0, n, n)
-  obj_val <- 0
-  # Set up constraints --------------------------------------------------------------------------
+
   w <- CVXR::Variable(N)
+  multi_f <- sapply(u, FUN, theta)
+  g1 <- multi_f %*% w
+  G2 <- multi_f %*% CVXR::diag(w) %*% t(multi_f)# Set up constraints --------------------------------------------------------------------------
+
   my_constraints <- list(w >= 0, sum(w) == 1)
-  for (i in 1:N) {
-    f <- FUN(u[i], theta)
-    g1 <- g1 + w[i] * f
-    G2 <- G2 + w[i] * f %*% t(f)
-  }
 
   B <- rbind(cbind(1, sqrt(tt) * t(g1)),
              cbind(sqrt(tt) * g1, G2))
@@ -46,8 +42,9 @@ Dopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
   objective <- -CVXR::log_det(B)
   problem <- CVXR::Problem(CVXR::Minimize(objective),
                            constraints = my_constraints)
-  res <- CVXR::solve(problem, num_iter = num_iter)
-  res$getValue(w)
+  res <- CVXR::solve(problem, num_iter = num_iter,
+                     ignore_dcp = TRUE)
+
   # figure out the location of the design points
   tb <- data.frame(location = u,
                    weight = c(res$getValue(w)))
