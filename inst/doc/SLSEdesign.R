@@ -39,8 +39,8 @@ poly3 <- function(xi,theta){
 design <- data.frame(location = c(-1, -0.447, 0.447, 1),
  weight = rep(0.25, 4))
 u = seq(-1, 1, length.out = 201)
-plot_direction_Dopt(u, design, tt=0, FUN = poly3,
-  theta = rep(0, 4))
+plot_dispersion(u, design, tt = 0, FUN = poly3,
+  theta = rep(0, 4), criterion = "D")
 
 ## -----------------------------------------------------------------------------
 poly3 <- function(xi, theta){
@@ -49,7 +49,7 @@ poly3 <- function(xi, theta){
 design <- data.frame(location = c(-1, -0.464, 0.464, 1),
                     weight = c(0.151, 0.349, 0.349, 0.151))
 u = seq(-1, 1, length.out = 201)
-plot_direction_Aopt(u, design, tt=0, FUN = poly3, theta = rep(0,4))
+plot_dispersion(u, design, tt = 0, FUN = poly3, theta = rep(0,4), criterion = "A")
 
 ## ----include = FALSE----------------------------------------------------------
 options(original) # reset to old settings
