@@ -48,7 +48,9 @@ Dopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
   # figure out the location of the design points
   tb <- data.frame(location = u,
                    weight = c(res$getValue(w)))
-  tb <- tb[tb$weight > 1E-2, ]
+  tb <- tb[tb$weight > 1E-3, ]
+  # normalize the weights
+  tb[, "weight"] <- tb[, "weight"]/sum(tb[, "weight"])
   list(val = res$value, status = res$status, design = tb)
 }
 

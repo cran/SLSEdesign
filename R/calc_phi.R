@@ -1,4 +1,4 @@
-#' Calculate the loss function of the A- or D-optimal design
+#' Calculate the loss function of the A-, c- or D-optimal design
 #'
 #' @param design The resulted design that contains the design points and the associated weights
 #' @param FUN The function to calculate the derivative of the given model.
@@ -6,6 +6,7 @@
 #' @param theta The parameter value of the model
 #' @param A The calculated covariance matrix
 #' @param criterion The criterion to be used for the design, either "D" for D-optimality or "A" for A-optimality. Default is "D".
+#' @param cVec c vector used to determine the combination of the parameters. This is only used in c-optimality
 #'
 #' @details This function calculates the loss function of the design problem under the A- or D-optimality. The loss functions under A-, or D-optimality are defined as the trace and log determinant of the inverse of the Fisher information matrix
 #'
@@ -25,7 +26,7 @@
 #' res
 #' @export
 
-calc_phi <- function(design, theta, FUN, tt, A, criterion = "D") {
+calc_phi <- function(design, theta, FUN, tt, A, criterion = "D", cVec = rep(0, length(theta))) {
   u <- design$location
   N <- length(u)
   q <- length(theta)
@@ -34,6 +35,9 @@ calc_phi <- function(design, theta, FUN, tt, A, criterion = "D") {
   if (criterion == "A") {
     BI <- solve(A)
     C <- diag(c(0, rep(1, q)))
+  } else if (criterion == "c"){
+    cVec_arg <- c(0, cVec)
+    BI <- solve(A)
   }
 
   for (i in 1:N) {
@@ -45,6 +49,10 @@ calc_phi <- function(design, theta, FUN, tt, A, criterion = "D") {
       phi[i] <- sum(diag(I %*% BI %*% t(C) %*% C %*% BI))
     } else if (criterion == "D") {
       phi[i] <- sum(diag(solve(A, I)))
+    } else if (criterion == "c") {
+      phi[i] <- cVec_arg %*% solve(I) %*% cVec_arg
+    } else {
+      stop("Criterion must be either 'A', 'D', or 'c'.")
     }
   }
   return(phi)

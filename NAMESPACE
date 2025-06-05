@@ -3,6 +3,7 @@
 export(Aopt)
 export(Dopt)
 export(calc_phi)
+export(copt)
 export(plot_dispersion)
 export(plot_weight)
 import(CVXR)

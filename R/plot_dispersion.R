@@ -1,13 +1,14 @@
-#' Verify the optimality condition for an optimal design (A- or D-optimality)
+#' Verify the optimality condition for an optimal design (A-, c- or D-optimality)
 #'
 #' @param u The discretized design points
 #' @param design The optimal design containing the design points and the associated weights
 #' @param tt The level of skewness
 #' @param FUN The function to calculate the derivative of the given model
 #' @param theta The parameter value of the model
-#' @param criterion The optimality criterion: one of "A" or "D"
+#' @param criterion The optimality criterion: one of "A", "c", or "D"
+#' @param cVec c vector used to determine the combination of the parameters. This is only used in c-optimality
 #'
-#' @details This function visualizes the directional derivative under A- or D-optimality using the general equivalence theorem. For an optimal design, the directional derivative should not exceed the reference threshold (0 for A-optimality, q+1 for D-optimality).
+#' @details This function visualizes the directional derivative under A-, c-, or D-optimality using the general equivalence theorem. For an optimal design, the directional derivative should not exceed the reference threshold
 #'
 #' @return A plot verifying the general equivalence condition for the specified optimal design
 #'
@@ -31,21 +32,24 @@
 #' @importFrom graphics abline legend lines points
 #' @export
 
-plot_dispersion <- function(u, design, tt, FUN, theta, criterion = "D") {
+plot_dispersion <- function(u, design, tt, FUN, theta, criterion = "D", cVec = rep(0, length(theta))) {
   N <- length(u)
   q <- length(theta)
   sqt <- sqrt(tt)
-  g1 <- matrix(0, ncol = 1, nrow = q)
-  G2 <- matrix(0, nrow = q, ncol = q)
+  x_star <- design$location
+  w_star <- design$weight
+  n <- length(theta)
 
-  # Compute moments from design
-  for (j in 1:nrow(design)) {
-    uj <- design$location[j]
-    wj <- design$weight[j]
-    f <- FUN(uj, theta)
-    g1 <- g1 + wj * f
-    G2 <- G2 + wj * tcrossprod(f)
+  if (criterion == "A") {
+    C <-  rbind(0, diag(1, n))
+  } else if (criterion == "c") {
+    cVec_arg <- c(0, cVec)
   }
+
+
+  multi_f <- sapply(x_star, FUN, theta)
+  g1 <- multi_f %*% w_star
+  G2 <- multi_f %*% diag(w_star) %*% t(multi_f)
 
   # Compute Fisher information matrix and its inverse
   B <- rbind(cbind(1, sqt * t(g1)),
@@ -68,6 +72,13 @@ plot_dispersion <- function(u, design, tt, FUN, theta, criterion = "D") {
       M <- rbind(cbind(1, sqt * t(f)),
                  cbind(sqt * f, tcrossprod(f)))
       y[i] <- sum(diag(BI %*% M)) - (q + 1)
+    }
+  } else if (criterion == "c") {
+    for (i in 1:N) {
+      f <- FUN(u[i], theta)
+      M <- rbind(cbind(1, sqt * t(f)),
+                 cbind(sqt * f, tcrossprod(f)))
+      y[i] <- t(cVec_arg) %*% BI %*% M %*% BI %*% cVec_arg - t(cVec_arg) %*% BI %*% cVec_arg
     }
   }
 

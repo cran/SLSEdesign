@@ -2,9 +2,17 @@
 % Please edit documentation in R/calc_phi.R
 \name{calc_phi}
 \alias{calc_phi}
-\title{Calculate the loss function of the A- or D-optimal design}
+\title{Calculate the loss function of the A-, c- or D-optimal design}
 \usage{
-calc_phi(design, theta, FUN, tt, A, criterion = "D")
+calc_phi(
+  design,
+  theta,
+  FUN,
+  tt,
+  A,
+  criterion = "D",
+  cVec = rep(0, length(theta))
+)
 }
 \arguments{
 \item{design}{The resulted design that contains the design points and the associated weights}
@@ -18,12 +26,14 @@ calc_phi(design, theta, FUN, tt, A, criterion = "D")
 \item{A}{The calculated covariance matrix}
 
 \item{criterion}{The criterion to be used for the design, either "D" for D-optimality or "A" for A-optimality. Default is "D".}
+
+\item{cVec}{c vector used to determine the combination of the parameters. This is only used in c-optimality}
 }
 \value{
 The loss of the model at each design points
 }
 \description{
-Calculate the loss function of the A- or D-optimal design
+Calculate the loss function of the A-, c- or D-optimal design
 }
 \details{
 This function calculates the loss function of the design problem under the A- or D-optimality. The loss functions under A-, or D-optimality are defined as the trace and log determinant of the inverse of the Fisher information matrix

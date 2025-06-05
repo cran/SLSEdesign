@@ -2,9 +2,17 @@
 % Please edit documentation in R/plot_dispersion.R
 \name{plot_dispersion}
 \alias{plot_dispersion}
-\title{Verify the optimality condition for an optimal design (A- or D-optimality)}
+\title{Verify the optimality condition for an optimal design (A-, c- or D-optimality)}
 \usage{
-plot_dispersion(u, design, tt, FUN, theta, criterion = "D")
+plot_dispersion(
+  u,
+  design,
+  tt,
+  FUN,
+  theta,
+  criterion = "D",
+  cVec = rep(0, length(theta))
+)
 }
 \arguments{
 \item{u}{The discretized design points}
@@ -17,16 +25,18 @@ plot_dispersion(u, design, tt, FUN, theta, criterion = "D")
 
 \item{theta}{The parameter value of the model}
 
-\item{criterion}{The optimality criterion: one of "A" or "D"}
+\item{criterion}{The optimality criterion: one of "A", "c", or "D"}
+
+\item{cVec}{c vector used to determine the combination of the parameters. This is only used in c-optimality}
 }
 \value{
 A plot verifying the general equivalence condition for the specified optimal design
 }
 \description{
-Verify the optimality condition for an optimal design (A- or D-optimality)
+Verify the optimality condition for an optimal design (A-, c- or D-optimality)
 }
 \details{
-This function visualizes the directional derivative under A- or D-optimality using the general equivalence theorem. For an optimal design, the directional derivative should not exceed the reference threshold (0 for A-optimality, q+1 for D-optimality).
+This function visualizes the directional derivative under A-, c-, or D-optimality using the general equivalence theorem. For an optimal design, the directional derivative should not exceed the reference threshold
 }
 \examples{
 poly3 <- function(xi, theta){
