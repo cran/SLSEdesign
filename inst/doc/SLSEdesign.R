@@ -12,7 +12,7 @@ require(SLSEdesign)
 require(CVXR)
 
 ## ----Define inputs, cache = TRUE----------------------------------------------
-N <- 21
+N <- 101
 S <- c(-1, 1)
 tt <- 0
 theta <- rep(1, 4)
@@ -27,7 +27,9 @@ res <- Aopt(N = N, u = u, tt = tt, FUN = poly3,
             theta = theta)
 
 ## ----output-------------------------------------------------------------------
-res$design
+res$val
+res$status
+round(res$design, 4)
 
 ## ----weight-------------------------------------------------------------------
 plot_weight(res$design)
@@ -47,9 +49,10 @@ poly3 <- function(xi, theta){
   matrix(c(1, xi, xi^2, xi^3), ncol = 1)
 }
 design <- data.frame(location = c(-1, -0.464, 0.464, 1),
-                    weight = c(0.151, 0.349, 0.349, 0.151))
+                     weight = c(0.151, 0.349, 0.349, 0.151))
 u = seq(-1, 1, length.out = 201)
-plot_dispersion(u, design, tt = 0, FUN = poly3, theta = rep(0,4), criterion = "A")
+plot_dispersion(u, design, tt = 0, 
+                FUN = poly3, theta = rep(0,4), criterion = "A")
 
 ## ----c-optimality-------------------------------------------------------------
 my_peleg <- function(xi, theta) {
@@ -62,11 +65,13 @@ my_theta <- c(0.5, 0.05)
 my_cVec <- c(1, 1)
 my_design <- copt(
   N = Npt, u = my_u,
-  tt = 0, FUN = my_peleg, theta = my_theta, num_iter = 50000,
+  tt = 0, FUN = my_peleg, theta = my_theta,
   cVec = my_cVec
 )
 
-plot_dispersion(my_u, my_design$design, tt = 0, FUN = my_peleg, theta = my_theta, criterion = "c", cVec = my_cVec)
+plot_dispersion(my_u, my_design$design, tt = 0, 
+                FUN = my_peleg, theta = my_theta, 
+                criterion = "c", cVec = my_cVec)
 
 ## ----include = FALSE----------------------------------------------------------
 options(original) # reset to old settings

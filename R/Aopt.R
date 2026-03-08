@@ -5,7 +5,7 @@
 #' @param u The discretized design space.
 #' @param tt The level of skewness between 0 to 1 (inclusive). When tt=0, it is equivalent to compute the A-optimal design under the ordinary least squares estimator.
 #' @param theta The parameter value of the model.
-#' @param num_iter Maximum number of iteration.
+#' @param show_cvxr_status A boolean variable to indicate whether to show the status of the CVXR optimization. By default, it is set to FALSE.
 #'
 #' @details This function calculates the A-optimal design and the loss function under the A-optimality. The loss function under A-optimality is defined as the trace of the inverse of the Fisher information matrix
 #'
@@ -19,12 +19,12 @@
 #' }
 #' Npt <- 101
 #' my_design <- Aopt(N = Npt, u = seq(-1, +1, length.out = Npt),
-#'    tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+#'    tt = 0, FUN = poly3, theta = rep(0,4))
 #' round(my_design$design, 3)
 #' my_design$val
 #' @export
 
-Aopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
+Aopt <- function(N, u, tt, FUN, theta, show_cvxr_status = FALSE){
 
   n <- length(theta)
   C <-  rbind(0, diag(1, n))
@@ -32,25 +32,31 @@ Aopt <- function(N, u, tt, FUN, theta, num_iter = 1000){
   w <- CVXR::Variable(N)
   multi_f <- sapply(u, FUN, theta)
   g1 <- multi_f %*% w
-  G2 <- multi_f %*% CVXR::diag(w) %*% t(multi_f)
+  G2 <- multi_f %*% CVXR::DiagVec(w) %*% t(multi_f)
 
-  B <- rbind(cbind(1, sqrt(tt) * t(g1)),
-             cbind(sqrt(tt) * g1, G2))
+
+  B <- CVXR::bmat(list(
+    list(1, sqrt(tt)*t(g1)),
+    list(sqrt(tt)*g1, G2)
+  ))
   obj_val <- CVXR::matrix_frac(C, B)
 
-  my_constraints <- list(w >=0, sum(w) == 1)
+  my_constraints <- list(w >= 0, sum(w) == 1)
 
   # Solve the optimization problem
   problem <- CVXR::Problem(CVXR::Minimize(obj_val),
                            constraints = my_constraints)
-  res <- CVXR::solve(problem, num_iter = num_iter,
-                     ignore_dcp = TRUE)
+  res <- CVXR::psolve(problem,
+                      solver = "SCS",
+                      verbose = show_cvxr_status,
+                      reltol = 1e-6,
+                      abstol = 1e-6)
 
   # figure out the location of the design points
   tb <- data.frame(location = u,
-               weight = c(res$getValue(w)))
+                   weight = c(CVXR::value(w)))
   tb <- tb[tb$weight > 1E-3, ]
   # normalize the weights
   tb[, "weight"] <- tb[, "weight"]/sum(tb[, "weight"])
-  list(val = res$value, status = res$status, design = tb)
+  list(val = res, status = CVXR::status(problem), design = tb)
 }

@@ -4,7 +4,7 @@
 \alias{copt}
 \title{Calculate the c-optimal design under the SLSE with the given combination of the parameters}
 \usage{
-copt(N, u, tt, FUN, theta, num_iter = 1000, cVec)
+copt(N, u, tt, FUN, theta, cVec, show_cvxr_status = FALSE)
 }
 \arguments{
 \item{N}{The number of sample points in the design space.}
@@ -17,9 +17,9 @@ copt(N, u, tt, FUN, theta, num_iter = 1000, cVec)
 
 \item{theta}{The parameter value of the model.}
 
-\item{num_iter}{Maximum number of iteration.}
-
 \item{cVec}{c vector used to determine the combination of the parameters}
+
+\item{show_cvxr_status}{A boolean variable to indicate whether to show the status of the CVXR optimization. By default, it is set to FALSE.}
 }
 \value{
 A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
@@ -36,7 +36,7 @@ poly3 <- function(xi, theta){
 }
 Npt <- 101
 my_design <- copt(N = Npt, u = seq(-1, +1, length.out = Npt),
-   tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000,
+   tt = 0, FUN = poly3, theta = rep(0,4),
    cVec = c(0,1,1,1))
 round(my_design$design, 3)
 my_design$val

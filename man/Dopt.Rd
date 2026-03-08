@@ -4,7 +4,7 @@
 \alias{Dopt}
 \title{Calculate the D-optimal design under the SLSE}
 \usage{
-Dopt(N, u, tt, FUN, theta, num_iter = 1000)
+Dopt(N, u, tt, FUN, theta, show_cvxr_status = FALSE)
 }
 \arguments{
 \item{N}{The number of sample points in the design space.}
@@ -17,7 +17,7 @@ Dopt(N, u, tt, FUN, theta, num_iter = 1000)
 
 \item{theta}{The parameter value of the model.}
 
-\item{num_iter}{Maximum number of iteration.}
+\item{show_cvxr_status}{A boolean variable to indicate whether to show the status of the CVXR optimization. By default, it is set to FALSE.}
 }
 \value{
 A list that contains 1. Value of the objective function at solution. 2. Status. 3. Optimal design
@@ -34,7 +34,7 @@ poly3 <- function(xi, theta){
 }
 Npt <- 101
 my_design <- Dopt(N = Npt, u = seq(-1, +1, length.out = Npt),
-   tt = 0, FUN = poly3, theta = rep(0,4), num_iter = 2000)
+   tt = 0, FUN = poly3, theta = rep(0,4))
 round(my_design$design, 3)
 my_design$val
 
